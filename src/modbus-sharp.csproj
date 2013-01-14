@@ -38,10 +38,4 @@
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="libmodbus-sharp\libmodbus-sharp.csproj">
-      <Project>{334AF314-DD00-44BA-AE03-CCD4CE364F3E}</Project>
-      <Name>libmodbus-sharp</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

@@ -665,7 +665,31 @@ namespace libmodbussharp
 			}
 			return ret;
 		}
-		
+
+		public unsafe int DirectWriteRegisterRW(int index, Single val) {
+			CheckContext ();
+			CheckMapping ();
+			if (index >= mapping->nb_registers) {
+				Exception ex=new Exception("Trying to access outside the registers memory space.");
+				throw ex;
+			}
+
+							
+			ushort[] buffer = new ushort[2];
+			fixed (ushort* p = &buffer[0]) {
+				ModbusPinvoke.SetFloat(val, p);
+			}
+			
+			int ret = ModbusPinvoke.WriteRegisterRW(modbusContext, index, buffer [1]);
+			if (ret != 0) {
+				ret = ModbusPinvoke.WriteRegisterRW(modbusContext, index + 1, buffer [0]);
+			}
+			if (ret<0) {
+				CheckForModbusError();
+			}
+			return ret;
+		}
+
 		public unsafe string Error(int errno) {
 			IntPtr prt = ModbusPinvoke.Error(errno);
 			return Marshal.PtrToStringAnsi(prt);
