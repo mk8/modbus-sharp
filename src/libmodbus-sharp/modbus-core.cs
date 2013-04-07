@@ -51,8 +51,8 @@ namespace libmodbussharp
 		private void CheckForModbusError() {
 			int errno = GetLastError ();
 			
-			if (errno!=0 && errno != 2) {
-				Exception ex = new Exception (Error(errno));
+			if (errno!=0 && errno != 2 && errno != 115) {
+				Exception ex = new Exception ("ERRNO: " + errno + " - " + Error(errno));
 				throw ex;
 			}			
 		}
