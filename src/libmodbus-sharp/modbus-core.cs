@@ -20,6 +20,8 @@ namespace libmodbussharp
 	{
 		public static int MODBUS_TCP_MAX_ADU_LENGTH = 260;
 
+		string AddressTarget;
+
 		IntPtr modbusContext = IntPtr.Zero;
 		IntPtr modbusResponseTimeout = IntPtr.Zero;
 		IntPtr modbusByteTimeout = IntPtr.Zero;
@@ -51,7 +53,7 @@ namespace libmodbussharp
 		private void CheckForModbusError() {
 			int errno = GetLastError ();
 			
-			if (errno!=0 && errno != 2 && errno != 115) {
+			if (errno!=0 && errno != 2 && errno != 115 && errno != 25) {
 				Exception ex = new Exception ("ERRNO: " + errno + " - " + Error(errno));
 				throw ex;
 			}			
@@ -142,6 +144,8 @@ namespace libmodbussharp
 				
 		public ModbusCore (string AddressTarget, int port)
 		{
+
+			this.AddressTarget = AddressTarget;
 
 			// Create modbus tcpip context
 		    modbusContext = ModbusPinvoke.ModbusNewTcp(AddressTarget, port);
@@ -285,7 +289,7 @@ namespace libmodbussharp
 				Exception ex=new Exception("Trying to access outside defined memory space for input_registers");
 				throw ex;
 			}
-			
+
 			res=ModbusPinvoke.RegistersInputRead(modbusContext, start,length,&mapping->tab_input_registers[start]);
 			if (res<0) {
 				CheckForModbusError();
